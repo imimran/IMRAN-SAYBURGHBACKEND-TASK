@@ -1,0 +1,27 @@
+{
+  "name": "IMRAN-SAYBURGHBACKEND-TASK",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "repository": "https://github.com/imimran/IMRAN-SAYBURGHBACKEND-TASK.git",
+  "author": "imimran <engr.aih@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon -r esm src/server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "config": "^3.3.6",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mongoose": "^6.1.4",
+    "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
+    "winston": "^3.3.3",
+    "yup": "^0.32.11"
+  }
+}
