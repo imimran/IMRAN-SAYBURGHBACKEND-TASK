@@ -3,6 +3,11 @@ import logger from "../logger";
 import { authUser } from "../middlewares/tokenAuth";
 import Tag from "../models/tag";
 
+const getAllPost = async (req, res) => {
+  const posts = await Post.find({}).populate("authorId", "name").populate("tags", "name");
+  return res.json(posts)
+};
+
 const addPost = async (req, res) => {
   const data = req.body;
   const tags = req.body.tags;
@@ -61,7 +66,7 @@ const updatePost = async (req, res) => {
   const foundAuthorPost = await Post.findOne({ authorId: auth_user._id });
 
   if (!foundAuthorPost) {
-    return res.json({ msg:  "You do not have permission." });
+    return res.json({ msg: "You do not have permission." });
   }
 
   let itemArr;
@@ -86,7 +91,7 @@ const updatePost = async (req, res) => {
 
   console.log("arrs", itemArr);
 
-  const query = foundPost._id
+  const query = foundPost._id;
 
   const updateData = {
     title: data.title,
@@ -94,13 +99,11 @@ const updatePost = async (req, res) => {
     authorId: auth_user._id,
     tags: itemArr,
   };
-  
+
   const options = { new: true, omitUndefined: true };
   const updatePost = await Post.findOneAndUpdate(query, updateData, options);
-  return res.json({msg:"Update Successfully"})
+  return res.json({ msg: "Update Successfully" });
 };
-
-
 
 const deletePost = async (req, res) => {
   const token = req.cookies["accessToken"];
@@ -116,14 +119,15 @@ const deletePost = async (req, res) => {
   const foundAuthorPost = await Post.findOne({ authorId: auth_user._id });
 
   if (!foundAuthorPost) {
-    return res.json({ msg:  "You do not have permission." });
+    return res.json({ msg: "You do not have permission." });
   }
 
-    await Post.findByIdAndRemove({ _id: postId });
-    return res.json({ msg: "Post Delete Successfuly" });
+  await Post.findByIdAndRemove({ _id: postId });
+  return res.json({ msg: "Post Delete Successfuly" });
 };
 
 export default {
+  getAllPost,
   addPost,
   updatePost,
   deletePost,
