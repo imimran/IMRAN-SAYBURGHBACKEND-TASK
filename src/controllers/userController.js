@@ -1,7 +1,6 @@
 
 import User from "../models/user";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import logger from "../logger";
 
@@ -56,22 +55,21 @@ const login = async (req, res) => {
     return res.status(400).json({ error: true, msg: "Invalid credentials." });
   }
 
-  const generateToken = crypto.randomBytes(10).toString("hex");
-  const refreshToken = jwt.sign(generateToken, "jwtPrivateKey");
-
+ 
   const payload = {
     id: foundUser._id,
     email: foundUser.email,
   };
 
+  const refreshToken = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "24h" });
 
-  jwt.sign(payload, "jwtPrivateKey", { expiresIn: "24h" }, (err, token) => {
-    if (err) {
-      throw err;
-    }
+  const token =jwt.sign(payload, "jwtPrivateKey", { expiresIn: "1h" })
 
     return res
       .cookie("accessToken", token, {
+        httpOnly: true,
+      })
+      .cookie("refreshToken", refreshToken, {
         httpOnly: true,
       })
       .status(200)
@@ -79,7 +77,7 @@ const login = async (req, res) => {
         accessToken: token,
         refreshToken: refreshToken,
       });
-  });
+ 
 };
 
 const logout = async (_req, res) => {
