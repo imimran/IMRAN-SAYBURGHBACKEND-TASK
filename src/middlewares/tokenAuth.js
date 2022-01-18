@@ -31,8 +31,8 @@ export async function tokenAuth(req, res, next) {
 export const authUser = async (token) => {
   try {
     const decoded = jwt.verify(token, "jwtPrivateKey");
-    //   console.log("decode", decoded);
-    let auth_user = await User.findOne({ _id: decoded._id }).then((data) => {
+      console.log("decode", decoded);
+    let auth_user = await User.findOne({ _id: decoded.id }).then((data) => {
       return data;
     });
     return auth_user;
