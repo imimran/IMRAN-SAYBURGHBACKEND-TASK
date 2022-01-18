@@ -15,5 +15,6 @@ router.post(
   PostController.addPost
 );
 router.delete("/:postId", auth, PostController.deletePost);
+router.put("/:postId", auth, PostController.updatePost);
 
 export default router;
