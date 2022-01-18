@@ -36,12 +36,12 @@ const addUser = async (req, res) => {
   const user = await newUser.save();
 
 
-  return res.status(201).json(user);
+  return res.status(201).json({ msg: "User create successfully"});
 };
 
 
 const login = async (req, res) => {
-  //console.log("login user", req.body);
+
   const { email, password } = req.body;
 
   //checking email registerd or not...
@@ -73,7 +73,6 @@ const login = async (req, res) => {
     return res
       .cookie("accessToken", token, {
         httpOnly: true,
-        maxAge: 300000,
       })
       .status(200)
       .json({
