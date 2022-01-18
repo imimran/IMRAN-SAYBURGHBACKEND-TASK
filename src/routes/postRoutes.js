@@ -14,5 +14,6 @@ router.post(
   inputValidator(createPostSchema),
   PostController.addPost
 );
+router.delete("/:postId", auth, PostController.deletePost);
 
 export default router;
