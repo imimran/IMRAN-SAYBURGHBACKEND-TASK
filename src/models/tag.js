@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-
+//tag model
 const TagSchema = new Schema(
   {
     name: {

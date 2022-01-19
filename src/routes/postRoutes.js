@@ -7,6 +7,8 @@ import inputValidator from "../middlewares/inputValidator";
 import auth from "../middlewares/auth";
 
 const router = express.Router();
+
+//post routes
 router.get("/all", auth, PostController.getAllPost);
 router.post(
   "/create",

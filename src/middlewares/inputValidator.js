@@ -1,5 +1,7 @@
 import logger from "../logger";
 
+
+//validate function
 export default (bodySchema, paramsSchema) => {
   return async (req, res, next) => {
     try {

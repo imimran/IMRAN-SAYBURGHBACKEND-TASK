@@ -8,6 +8,7 @@ import auth from "../middlewares/auth";
 
 const router = express.Router();
 
+//comment create routes
 router.post(
   "/create",
   auth,

@@ -1,6 +1,8 @@
 import logger from "../logger";
 import User from "../models/user";
 
+
+//passport strategy
 const JwtStrategy = require("passport-jwt").Strategy;
 // const ExtractJwt = require("passport-jwt").ExtractJwt;
 

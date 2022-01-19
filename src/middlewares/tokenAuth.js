@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 
+
+//jwt auth function
+// But I am use passport auth function in middleware
 export async function tokenAuth(req, res, next) {
   const token = req.header("auth-token");
   if (!token)
@@ -28,6 +31,8 @@ export async function tokenAuth(req, res, next) {
   }
 }
 
+
+//Check auth user
 export const authUser = async (token) => {
   try {
     const decoded = jwt.verify(token, "jwtPrivateKey");

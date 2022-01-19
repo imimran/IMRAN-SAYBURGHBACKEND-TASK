@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
+//post model
 const PostSchema = new Schema(
   {
     title: {

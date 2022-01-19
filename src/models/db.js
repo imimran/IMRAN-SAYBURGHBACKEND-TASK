@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import logger from "../logger";
 
+
+//db connect
 export async function createConnectionAndInitialize(dbUrl) {
   try {
     await mongoose.connect(dbUrl);

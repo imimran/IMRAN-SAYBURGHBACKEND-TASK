@@ -6,6 +6,7 @@ import commentController from "./commentController";
 
 const router = express.Router();
 
+//import all routes
 router.use("/user", UserRouter);
 router.use("/post", PostRoutes);
 router.use("/comment", commentController);

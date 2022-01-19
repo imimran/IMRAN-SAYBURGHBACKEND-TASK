@@ -10,12 +10,13 @@ import { router } from "./routes";
 
 const app = express();
 
+//middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(cookieParser());
 
-
+//db
 createConnectionAndInitialize(MONGO_URL)
   .then()
   .catch((err) => {
@@ -34,6 +35,8 @@ app.get("/", (req, res) => {
   res.status(200).json({ error: false, msg: "Hello Imran" });
 });
 
+
+//main route import
 app.use("/api/v1", router);
 
 app.use(errorHandler);

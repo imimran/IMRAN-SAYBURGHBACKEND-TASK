@@ -3,22 +3,27 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 let refreshTokens = [];
 
+
+//userlist
 const getAllUsers = async (_req, res) => {
   const user = await User.find({}).select("-password -__v -updatedAt");
   return res.status(200).json(user);
 };
 
+//user register
 const addUser = async (req, res) => {
   const data = req.body;
 
+  //if email exist or not
   const foundEmail = await User.findOne({
     email: data.email,
   });
-
   if (foundEmail) {
     return res.status(400).json({ message: "Email already exists" });
   }
 
+
+  //hashed password
   const salt = await bcrypt.genSalt(10);
   let passwordHash = await bcrypt.hash(data.password, salt);
 
@@ -54,9 +59,9 @@ const login = async (req, res) => {
     id: foundUser._id,
     email: foundUser.email,
   };
-
+  //create refresh token
   const refreshToken = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "1d" });
-  
+  //create access token
   const token = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "1h" });
 
   const response = {
@@ -77,7 +82,7 @@ const login = async (req, res) => {
     .json(response);
 };
 
-
+//create new access token
 const generateToken = (req,res) => {
   const refreshToken = req.cookies["refreshToken"];
   if (!refreshToken || !refreshTokens.includes(refreshToken)) {
@@ -106,6 +111,7 @@ const generateToken = (req,res) => {
   });
 }
 
+//logout & clear all token from cookie
 const logout = async (_req, res) => {
   return res
     .clearCookie("accessToken")
