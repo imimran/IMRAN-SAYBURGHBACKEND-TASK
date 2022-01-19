@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 let refreshTokens = [];
 
 const getAllUsers = async (_req, res) => {
-  const user = await User.find({});
+  const user = await User.find({}).select("-password -__v -updatedAt");
   return res.status(200).json(user);
 };
 
@@ -57,7 +57,7 @@ const login = async (req, res) => {
 
   const refreshToken = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "1d" });
   
-  const token = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "10s" });
+  const token = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "1h" });
 
   const response = {
     msg: "Logged in Success",
@@ -88,7 +88,7 @@ const generateToken = (req,res) => {
   jwt.verify(refreshToken, "jwtPrivateKey", (err, user) => {
       if (!err) {
           const accessToken = jwt.sign({  id: user.id, email: user.email }, "jwtPrivateKey", {
-              expiresIn: "20s"
+              expiresIn: "1h"
           });
 
           console.log("accessToken", accessToken);
