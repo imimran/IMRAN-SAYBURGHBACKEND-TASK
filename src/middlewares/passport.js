@@ -1,6 +1,6 @@
 import logger from "../logger";
 import User from "../models/user";
-
+import { JWT_KEY } from "../config";
 
 //passport strategy
 const JwtStrategy = require("passport-jwt").Strategy;
@@ -21,7 +21,7 @@ export default function (passport) {
   var opts = {};
 //   opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
   opts.jwtFromRequest = cookieExtractor;
-  opts.secretOrKey = "jwtPrivateKey";
+  opts.secretOrKey = JWT_KEY;
   passport.use(
     new JwtStrategy(opts, (jwt_payload, done) => {
         

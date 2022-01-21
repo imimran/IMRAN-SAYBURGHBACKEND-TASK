@@ -1,12 +1,12 @@
 import User from "../models/user";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-let refreshTokens = [];
+import {JWT_KEY} from '../config'
 
 
 //userlist
 const getAllUsers = async (_req, res) => {
-  const user = await User.find({}).select("-password -__v -updatedAt");
+  const user = await User.find({}).select("-password -__v -updatedAt -refreshToken");
   return res.status(200).json(user);
 };
 
@@ -60,16 +60,18 @@ const login = async (req, res) => {
     email: foundUser.email,
   };
   //create refresh token
-  const refreshToken = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "1d" });
+  const refreshToken = jwt.sign(payload, JWT_KEY, { expiresIn: "1d" });
+  // store refresh token in db
+  await User.findOneAndUpdate({_id: foundUser._id}, {refreshToken:refreshToken }, { new: true });
   //create access token
-  const token = jwt.sign(payload, "jwtPrivateKey", { expiresIn: "1h" });
+  const token = jwt.sign(payload, JWT_KEY, { expiresIn: "20s" });
 
   const response = {
     msg: "Logged in Success",
     token: token,
     refreshToken: refreshToken,
   };
-  refreshTokens.push(refreshToken);
+
 
   return res
     .cookie("accessToken", token, {
@@ -85,14 +87,15 @@ const login = async (req, res) => {
 //create new access token
 const generateToken = (req,res) => {
   const refreshToken = req.cookies["refreshToken"];
-  if (!refreshToken || !refreshTokens.includes(refreshToken)) {
+  if (!refreshToken ) {
       return res.json({ message: "Refresh token not found, login again" });
   }
 
+
   // If the refresh token is valid, create a new accessToken and return it.
-  jwt.verify(refreshToken, "jwtPrivateKey", (err, user) => {
+  jwt.verify(refreshToken, JWT_KEY, (err, user) => {
       if (!err) {
-          const accessToken = jwt.sign({  id: user.id, email: user.email }, "jwtPrivateKey", {
+          const accessToken = jwt.sign({  id: user.id, email: user.email }, JWT_KEY, {
               expiresIn: "1h"
           });
 
@@ -101,9 +104,10 @@ const generateToken = (req,res) => {
           .cookie("accessToken", accessToken, {
                   httpOnly: true,
                 })
+                .status(200)
           .json({ success: true, accessToken });
       } else {
-          return res.json({
+          return res. status(401).json({
               success: false,
               message: "Invalid refresh token"
           });
